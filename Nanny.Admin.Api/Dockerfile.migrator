@@ -1,0 +1,28 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY ["Nanny.Admin.Api/Nanny.Admin.Api.csproj", "Nanny.Admin.Api/"]
+COPY ["Nanny.Admin.Application/Nanny.Admin.Application.csproj", "Nanny.Admin.Application/"]
+COPY ["Nanny.Admin.Domain/Nanny.Admin.Domain.csproj", "Nanny.Admin.Domain/"]
+COPY ["Nanny.Admin.Infrastructure/Nanny.Admin.Infrastructure.csproj", "Nanny.Admin.Infrastructure/"]
+
+RUN dotnet restore "Nanny.Admin.Api/Nanny.Admin.Api.csproj"
+RUN dotnet restore "Nanny.Admin.Infrastructure/Nanny.Admin.Infrastructure.csproj"
+
+COPY . .
+
+RUN dotnet build "Nanny.Admin.Api/Nanny.Admin.Api.csproj" -c Release -o /app/build
+RUN dotnet build "Nanny.Admin.Infrastructure/Nanny.Admin.Infrastructure.csproj" -c Release -o /app/build
+
+RUN dotnet tool install --global dotnet-ef
+
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+COPY Nanny.Admin.Api/migrate.sh /migrate.sh
+RUN chmod +x /migrate.sh
+
+# Set working directory to the root of the solution
+WORKDIR /src
+
+# Run the migration script
+CMD ["/migrate.sh"]
