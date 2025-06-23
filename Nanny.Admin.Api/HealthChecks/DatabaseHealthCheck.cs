@@ -3,7 +3,7 @@ using Nanny.Admin.Infrastructure.Db;
 
 namespace Nanny.Admin.Api.HealthChecks;
 
-public class CustomHealthCheck(AppDbContext context) : IHealthCheck
+public class DatabaseHealthCheck(AppDbContext context) : IHealthCheck
 {
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context1,
         CancellationToken cancellationToken = default)

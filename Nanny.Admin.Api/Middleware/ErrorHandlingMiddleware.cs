@@ -26,7 +26,6 @@ public class ErrorHandlingMiddleware(RequestDelegate next)
         {
             // Application exceptions
             ResourceNotFoundException => (404, "Resource not found", exception.Message),
-            KeyNotFoundException => (404, "Resource not found", exception.Message),
             
             // Domain exceptions
             DomainValidationException validationEx => (400, $"{validationEx.EntityType} validation failed", GetValidationDetails(validationEx)),
@@ -38,6 +37,7 @@ public class ErrorHandlingMiddleware(RequestDelegate next)
             // Generic exceptions
             ArgumentException => (400, "Invalid request", exception.Message),
             InvalidOperationException => (400, "Invalid operation", exception.Message),
+            KeyNotFoundException => (404, "Resource not found", exception.Message),
             _ => (500, "An unexpected error occurred", exception.Message)
         };
 

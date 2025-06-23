@@ -11,7 +11,6 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        // Check if we're in a test environment
         var isTestEnvironment = configuration["IsTestEnvironment"] == "true";
         
         if (!isTestEnvironment)
